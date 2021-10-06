@@ -395,11 +395,13 @@ int main()
 	bool h;
 	bool java;
 	bool py;
+	bool cs;
 	bool cc;
 	char choose;
 	cout << "                                  欢迎使用!!!" << endl;
-	cout << "                      软件支持c++、java、Python和c语言" << endl;
+	cout << "                      软件支持c++、java、Python、c#和c语言" << endl;
 	cout << endl;
+	SetConsoleColor(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 	cout << "是否统计c++的数据？            1.是          2.否" << endl;
 	choose = _getch();
 	if (choose == '1')
@@ -430,6 +432,7 @@ int main()
 		h = 0;
 		cout << "\a";
 	}
+	SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
 	cout << "是否统计java的数据？           1.是          2.否" << endl;
 	choose = _getch();
 	if (choose == '1')
@@ -442,9 +445,10 @@ int main()
 	}
 	else
 	{
-		cpp = 0;
+		java = 0;
 		cout << "\a";
 	}
+	SetConsoleColor(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
 	cout << "是否统计python的数据？         1.是          2.否" << endl;
 	choose = _getch();
 	if (choose == '1')
@@ -457,9 +461,26 @@ int main()
 	}
 	else
 	{
-		cpp = 0;
+		py = 0;
 		cout << "\a";
 	}
+	SetConsoleColor(FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+	cout << "是否统计c#的数据？             1.是          2.否" << endl;
+	choose = _getch();
+	if (choose == '1')
+	{
+		cs = 1;
+	}
+	else if (choose == '2')
+	{
+		cs = 0;
+	}
+	else
+	{
+		cs = 0;
+		cout << "\a";
+	}
+	SetConsoleColor(FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY);
 	cout << "是否统计c语言的数据？          1.是          2.否" << endl;
 	choose = _getch();
 	if (choose == '1')
@@ -472,15 +493,16 @@ int main()
 	}
 	else
 	{
-		cpp = 0;
+		cc = 0;
 		cout << "\a";
 	}
+	SetConsoleColor(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);  //默认情况下控制台颜色是白色，所以用“RGB”组合
 
 	//*************************************************************************
 	runstart();
 	//*************************计时开始***************************************
 	
-	cout << "加载中，请等待......." << endl;
+	cout << "遍历文件目录中，请等待......." << endl;
 	vector<string> files;
 	char   buffer[MAX_PATH];
 	getcwd(buffer, MAX_PATH);
@@ -527,12 +549,22 @@ int main()
 			SetConsoleColor(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);  //默认情况下控制台颜色是白色，所以用“RGB”组合
 			continue;
 		}
+		else if ((cs == 1) && files[i].find(".cs") < files[i].length() && files[i].find(".cs") >= files[i].length() - 3)
+		{
+			s++;
+			SetConsoleColor(FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+			cout << files[i].c_str() << endl;
+			SetConsoleColor(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);  //默认情况下控制台颜色是白色，所以用“RGB”组合
+			continue;
+		}
 		else if ((cc == 1) && files[i].find(".c") < files[i].length() && files[i].find(".c") >= files[i].length() - 2)
 		{
 			s++;
 			//cout << "\033[m";
+			SetConsoleColor(FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY);
 			cout << files[i].c_str() << endl;
 			//cout << "\033[m";
+			SetConsoleColor(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);  //默认情况下控制台颜色是白色，所以用“RGB”组合
 			continue;
 		}
 	}
@@ -562,6 +594,12 @@ int main()
 			continue;
 		}
 		else if ((py == 1) && files[i].find(".py") < files[i].length() && files[i].find(".py") >= files[i].length() - 3)
+		{
+			//s++;
+			out << files[i].c_str() << endl;
+			continue;
+		}
+		else if ((cs == 1) && files[i].find(".cs") < files[i].length() && files[i].find(".cs") >= files[i].length() - 3)
 		{
 			//s++;
 			out << files[i].c_str() << endl;
@@ -605,9 +643,11 @@ int main()
 	}
 	test.close();
 	ofstream fileout("out.txt", ios::app);
+	cout << "正在统计....." << endl;
 	for (int i = 0; i < s; i++)
 	{
 		ifstream file(paths[i], ios::in);
+		fileout << paths[i] << endl;
 		while (!file.eof())
 		{
 			c = file.get();
@@ -676,6 +716,14 @@ int main()
 	{
 		finalout << "Python：      否" << endl;
 	}
+	if (cs == 1)
+	{
+		finalout << "C#：             是" << endl;
+	}
+	else
+	{
+		finalout << "C#：             否" << endl;
+	}
 	if (cc == 1)
 	{
 		finalout << "c语言：         是" << endl;
@@ -692,6 +740,7 @@ int main()
 	finalout << endl;
 	finalout.close();
 	cout << "最终结果保存在相对路径下" << endl;
+	delete[]paths;
 
 
 	//*************************计时结束***************************************
